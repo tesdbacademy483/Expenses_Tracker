@@ -1,0 +1,176 @@
+:root {
+  --primary: #1e3a8a;
+  --primary-light: #3b82f6;
+  --bg: #f4f6fb;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --success: #22c55e;
+  --danger: #ef4444;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+}
+
+.sidebar-header h2 { margin: 0 0 4px; font-size: 18px; }
+.sidebar-user { margin: 0; font-size: 13px; opacity: 0.85; text-transform: capitalize; }
+.sidebar-branch { margin: 2px 0 20px; font-size: 12px; opacity: 0.7; }
+
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; flex: 1; margin-top: 12px; }
+
+.sidebar-link {
+  color: white;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+.sidebar-link:hover { background: rgba(255,255,255,0.1); }
+.sidebar-link.active { background: rgba(255,255,255,0.18); opacity: 1; font-weight: 600; }
+
+.logout-btn {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.logout-btn:hover { background: rgba(255,255,255,0.2); }
+
+.main-content { flex: 1; padding: 32px 40px; max-width: 1200px; }
+
+.page h1 { margin: 0 0 4px; font-size: 26px; }
+.page-subtitle { color: var(--text-muted); margin: 0 0 24px; }
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.card h3 { margin-top: 0; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(--primary); }
+
+.data-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.data-table th, .data-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+.data-table th { color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+
+.inline-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.inline-form.small input { max-width: 160px; }
+.inline-form input, .inline-form select {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.inline-form button, .login-card button {
+  background: var(--primary-light);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+.inline-form button:hover { background: var(--primary); }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.badge-green { background: #dcfce7; color: #166534; }
+.badge-gray { background: #f1f5f9; color: #475569; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+.badge-orange { background: #ffedd5; color: #9a3412; }
+
+.link-btn { background: none; border: none; color: var(--primary-light); cursor: pointer; font-size: 13px; text-decoration: underline; }
+
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 10px;
+  word-break: break-word;
+}
+
+.muted { color: var(--text-muted); font-size: 13px; }
+
+.report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.login-card h1 { font-size: 20px; margin: 0; }
+.login-card .subtitle { color: var(--text-muted); margin: 0 0 12px; font-size: 14px; }
+.login-card label { font-size: 13px; font-weight: 600; margin-top: 6px; }
+.login-card input {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+.login-card button { margin-top: 16px; padding: 12px; }
