@@ -1,11 +1,8 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework import viewsets, permissions
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import User
 from .serializers import UserSerializer, UserCreateSerializer, CustomTokenObtainPairSerializer
-#from core.permissions import IsAdmin
+from core.permissions import IsAdmin
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -16,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """Admin-only management of users (creating managers/admins)."""
 
     queryset = User.objects.all()
-   # permission_classes = [IsAdmin]
+    permission_classes = [IsAdmin]
 
     def get_serializer_class(self):
         if self.action == "create":

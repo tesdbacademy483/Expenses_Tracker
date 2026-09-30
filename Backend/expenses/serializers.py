@@ -48,6 +48,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context["request"]
         user = request.user
+        # Manager creates their OWN expense — auto-filled, they calculate/enter it themselves
         if user.role == "manager":
             manager_profile = user.manager_profile
             validated_data["manager"] = manager_profile

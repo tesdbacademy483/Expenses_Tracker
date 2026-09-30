@@ -1,6 +1,3 @@
-#from django.db import models
-
-# Create your models here.
 from django.db import models
 
 
@@ -10,6 +7,7 @@ class Target(models.Model):
         ("monthly", "Monthly"),
     )
 
+    # Set by ADMIN when assigning a target to a specific manager/branch
     manager = models.ForeignKey(
         "managers.ManagerProfile", on_delete=models.CASCADE, related_name="targets"
     )
@@ -29,6 +27,7 @@ class Target(models.Model):
 
 
 class TargetEntry(models.Model):
+    # This is the "Add Entry" record — target amount vs achieved amount
     target = models.ForeignKey(Target, on_delete=models.CASCADE, related_name="entries")
     date = models.DateField()
     target_amount = models.DecimalField(max_digits=14, decimal_places=2)
@@ -41,9 +40,10 @@ class TargetEntry(models.Model):
 
     @property
     def achievement_percent(self):
+        # Auto-calculated — this is what shows on the manager dashboard
         if self.target_amount == 0:
             return 0
         return round((self.achieved_amount / self.target_amount) * 100, 2)
 
     def __str__(self):
-        return f"{self.target.name} - {self.date}"#
+        return f"{self.target.name} - {self.date}"

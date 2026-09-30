@@ -1,7 +1,3 @@
-#from django.shortcuts import render
-
-# Create your views here.
-
 from rest_framework import viewsets
 from .models import Expense, SalaryExpense, TaxEntry
 from .serializers import ExpenseSerializer, SalaryExpenseSerializer, TaxEntrySerializer
@@ -11,10 +7,10 @@ from core.mixins import BranchScopedQuerysetMixin
 
 class ExpenseViewSet(BranchScopedQuerysetMixin, viewsets.ModelViewSet):
     """
-    Admins see/manage expenses across all branches.
-    Managers see/manage only expenses for their own branch.
+    Manager sees/creates ONLY their own branch's expenses —
+    this is what powers the "expense show pannanum, manager
+    calculation pannuvanga" part of the manager dashboard.
     """
-
     queryset = Expense.objects.select_related("branch", "manager__user").all()
     serializer_class = ExpenseSerializer
     permission_classes = [IsAdminOrManager]

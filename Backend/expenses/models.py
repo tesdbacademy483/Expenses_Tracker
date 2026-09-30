@@ -1,7 +1,3 @@
-#from django.db import models
-
-# Create your models here.
-
 from django.db import models
 
 
@@ -34,7 +30,7 @@ class Expense(models.Model):
 
 class SalaryExpense(models.Model):
     expense = models.OneToOneField(Expense, on_delete=models.CASCADE, related_name="salary_detail")
-    month = models.DateField(help_text="Use the first day of the month, e.g. 2026-09-01")
+    month = models.DateField()
     employee_count = models.PositiveIntegerField()
     amount = models.DecimalField(max_digits=14, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -43,20 +39,14 @@ class SalaryExpense(models.Model):
         db_table = "salary_expenses"
         ordering = ["-month"]
 
-    def __str__(self):
-        return f"Salary {self.month} - {self.amount}"
-
 
 class TaxEntry(models.Model):
     expense = models.OneToOneField(Expense, on_delete=models.CASCADE, related_name="tax_detail")
     tax_type = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=14, decimal_places=2)
-    month = models.DateField(help_text="Use the first day of the month, e.g. 2026-09-01")
+    month = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "tax_entries"
         ordering = ["-month"]
-
-    def __str__(self):
-        return f"{self.tax_type} - {self.amount}"

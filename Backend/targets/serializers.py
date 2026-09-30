@@ -3,7 +3,7 @@ from .models import Target, TargetEntry
 
 
 class TargetEntrySerializer(serializers.ModelSerializer):
-    achievement_percent = serializers.ReadOnlyField()
+    achievement_percent = serializers.ReadOnlyField()  # sent to frontend automatically
 
     class Meta:
         model = TargetEntry
@@ -17,7 +17,7 @@ class TargetEntrySerializer(serializers.ModelSerializer):
 class TargetSerializer(serializers.ModelSerializer):
     branch_name = serializers.CharField(source="branch.name", read_only=True)
     manager_name = serializers.CharField(source="manager.user.name", read_only=True)
-    entries = TargetEntrySerializer(many=True, read_only=True)
+    entries = TargetEntrySerializer(many=True, read_only=True)  # all "Add Entry" history nested here
 
     class Meta:
         model = Target
@@ -34,6 +34,7 @@ class TargetSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         request = self.context["request"]
         user = request.user
+        # ADMIN must pick which manager/branch this target belongs to
         if user.role == "admin":
             if not attrs.get("manager") or not attrs.get("branch"):
                 raise serializers.ValidationError(
@@ -44,6 +45,7 @@ class TargetSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context["request"]
         user = request.user
+        # MANAGER can never set branch/manager manually — auto-filled from their own login
         if user.role == "manager":
             manager_profile = user.manager_profile
             validated_data["manager"] = manager_profile
