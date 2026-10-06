@@ -113,6 +113,7 @@ class TargetEntry(models.Model):
     PAYMENT_CHOICES = (
         ("cash", "Cash"),
         ("card", "Card"),
+        ("upi", "UPI"),
     )
 
 

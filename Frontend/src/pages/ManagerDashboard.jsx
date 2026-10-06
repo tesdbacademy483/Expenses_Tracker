@@ -225,9 +225,11 @@ export default function ManagerDashboard() {
 
                     <td>
                         <span className="badge badge-blue">
-                            {entry.payment_type === "cash"
-                                ? "Cash"
-                                : "Card"}
+                          {entry.payment_type === "cash"
+                            ? "Cash"
+                            : entry.payment_type === "card"
+                            ? "Card"
+                            : "UPI"}
                         </span>
                     </td>
 
@@ -275,9 +277,10 @@ export default function ManagerDashboard() {
                 }
                 required
               >
-                <option value="">Cash / Card</option>
+                <option value="">Payment Mode</option>
                 <option value="cash">Cash</option>
                 <option value="card">Card</option>
+                <option value="upi">UPI</option>
               </select>
 
               <button type="submit">Add Entry</button>

@@ -20,6 +20,44 @@ export default function TargetManagement() {
   const [entryForm, setEntryForm] = useState({});
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [editEntry, setEditEntry] = useState(null);
+
+  const handleEditEntry = (targetId, entry) => {
+  if (!isAdmin) return;
+
+  setEditEntry({
+        id: entry.id,
+        target: targetId,
+        date: entry.date,
+        achieved_amount: entry.achieved_amount,
+        payment_type: entry.payment_type,
+      });
+    };
+
+    const handleUpdateEntry = async () => {
+  if (!isAdmin || !editEntry) return;
+
+  try {
+    await api.patch(
+      `/targets/entries/${editEntry.id}/`,
+      {
+        date: editEntry.date,
+        achieved_amount: editEntry.achieved_amount,
+        payment_type: editEntry.payment_type,
+      }
+    );
+
+    setEditEntry(null);
+    loadData();
+
+  } catch (err) {
+    setError(
+      JSON.stringify(
+        err.response?.data || "Failed to update payment"
+      )
+    );
+  }
+};
 
   const loadData = async () => {
     setLoading(true);
@@ -297,6 +335,7 @@ export default function TargetManagement() {
                 <th>Achieved</th>
                 <th>Payment Type</th>
                 <th>Achievement %</th>
+                {isAdmin && <th>Action</th>}
               </tr>
             </thead>
 
@@ -315,15 +354,28 @@ export default function TargetManagement() {
 
                   <td>
                       <span className="badge badge-blue">
-                          {entry.payment_type === "cash"
-                              ? "Cash"
-                              : "Card"}
+                        {entry.payment_type === "cash"
+                          ? "Cash"
+                          : entry.payment_type === "card"
+                          ? "Card"
+                          : "UPI"}
                       </span>
                   </td>
 
                   <td>
                     {entry.achievement_percent}%
                   </td>
+
+                  {isAdmin && (
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => handleEditEntry(t.id, entry)}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
 
                 </tr>
               ))}
@@ -332,7 +384,65 @@ export default function TargetManagement() {
 
           </table>
 
-   
+   {isAdmin &&
+  editEntry &&
+  editEntry.target === t.id && (
+    <div className="card">
+      <h4>Edit Payment</h4>
+
+      <input
+        type="date"
+        value={editEntry.date}
+        onChange={(e) =>
+          setEditEntry({
+            ...editEntry,
+            date: e.target.value,
+          })
+        }
+      />
+
+      <input
+        type="number"
+        step="0.01"
+        placeholder="Achieved amount"
+        value={editEntry.achieved_amount}
+        onChange={(e) =>
+          setEditEntry({
+            ...editEntry,
+            achieved_amount: e.target.value,
+          })
+        }
+      />
+
+      <select
+        value={editEntry.payment_type}
+        onChange={(e) =>
+          setEditEntry({
+            ...editEntry,
+            payment_type: e.target.value,
+          })
+        }
+      >
+        <option value="cash">Cash</option>
+        <option value="card">Card</option>
+        <option value="upi">UPI</option>
+      </select>
+
+      <button
+        type="button"
+        onClick={handleUpdateEntry}
+      >
+        Update
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setEditEntry(null)}
+      >
+        Cancel
+      </button>
+    </div>
+  )}
 
 {!isAdmin && (
             <form
@@ -390,9 +500,10 @@ export default function TargetManagement() {
                 }
                 required
               >
-                <option value="">Cash / Card</option>
+                <option value="">Payment Mode</option>
                 <option value="cash">Cash</option>
                 <option value="card">Card</option>
+                <option value="upi">UPI</option>
             </select>
 
               <button type="submit">
