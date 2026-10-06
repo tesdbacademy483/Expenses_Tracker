@@ -4,7 +4,7 @@ import api from "../api/axios";
 export default function ManagerManagement() {
   const [managers, setManagers] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [form, setForm] = useState({ name: "", email: "", password: "", branch_id: "", designation: "Branch Manager" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", branch_id: "", location: "", designation: "Branch Manager" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -41,9 +41,29 @@ export default function ManagerManagement() {
           <input type="email" placeholder="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
           <input type="password" placeholder="Temporary password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required minLength={6} />
           <select value={form.branch_id} onChange={(e) => setForm({ ...form, branch_id: e.target.value })} required>
-            <option value="">Select branch</option>
+            <option value="">Select Company</option>
             {branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
           </select>
+
+          <select
+              value={form.location}
+              onChange={(e) =>
+                  setForm({
+                      ...form,
+                      location: e.target.value
+                  })
+              }
+              required
+          >
+              <option value="">Select location</option>
+
+              {branches.map((b) => (
+                  <option key={b.id} value={b.location}>
+                      {b.location}
+                  </option>
+              ))}
+          </select>
+
           <input placeholder="Designation" value={form.designation} onChange={(e) => setForm({ ...form, designation: e.target.value })} />
           <button type="submit">Add Manager</button>
         </form>

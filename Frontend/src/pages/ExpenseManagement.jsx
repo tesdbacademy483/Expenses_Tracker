@@ -7,22 +7,66 @@ export default function ExpenseManagement() {
   const [expenses, setExpenses] = useState([]);
   const [branches, setBranches] = useState([]);
   const [managers, setManagers] = useState([]);
-  const [form, setForm] = useState({ type: "salary", amount: "", date: "", description: "", branch: "", manager: "" });
+  const [form, setForm] = useState({ type: "salary", amount: "", date: "", description: "", branch: "", manager: "", location:"" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // const loadData = async () => {
+  //   setLoading(true);
+  //   const requests = [api.get("/expenses/")];
+  //   if (isAdmin) requests.push(api.get("/branches/"), api.get("/managers/"));
+  //   const results = await Promise.all(requests);
+  //   setExpenses(results[0].data.results ?? results[0].data);
+  //   if (isAdmin) {
+  //     setBranches(results[1].data.results ?? results[1].data);
+  //     setManagers(results[2].data.results ?? results[2].data);
+  //   }
+  //   setLoading(false);
+  // };
+
   const loadData = async () => {
-    setLoading(true);
-    const requests = [api.get("/expenses/")];
-    if (isAdmin) requests.push(api.get("/branches/"), api.get("/managers/"));
-    const results = await Promise.all(requests);
-    setExpenses(results[0].data.results ?? results[0].data);
-    if (isAdmin) {
-      setBranches(results[1].data.results ?? results[1].data);
-      setManagers(results[2].data.results ?? results[2].data);
-    }
-    setLoading(false);
-  };
+        setLoading(true);
+
+        try {
+            const requests = [
+                api.get("/expenses/"),
+                api.get("/branches/")
+            ];
+
+            if (isAdmin) {
+                requests.push(api.get("/managers/"));
+            }
+
+            const results = await Promise.all(requests);
+
+            // Expenses
+            setExpenses(
+                results[0].data.results ?? results[0].data
+            );
+
+            // Branches - available for BOTH Admin and Manager
+            setBranches(
+                results[1].data.results ?? results[1].data
+            );
+
+            // Managers - only needed for Admin
+            if (isAdmin) {
+                setManagers(
+                    results[2].data.results ?? results[2].data
+                );
+            }
+
+        } catch (err) {
+            setError(
+                JSON.stringify(
+                    err.response?.data ||
+                    "Failed to load expense data"
+                )
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
 
   useEffect(() => { loadData(); }, []);
 
@@ -31,7 +75,7 @@ export default function ExpenseManagement() {
     setError("");
     try {
       const payload = {
-        type: form.type, amount: form.amount, date: form.date, description: form.description,
+        type: form.type, amount: form.amount, date: form.date, description: form.description,location: form.location,
       };
       if (isAdmin) {
         payload.branch = Number(form.branch);
@@ -77,6 +121,27 @@ export default function ExpenseManagement() {
               </select>
             </>
           )}
+          <select
+              value={form.location}
+              onChange={(e) =>
+                  setForm({
+                      ...form,
+                      location: e.target.value
+                  })
+              }
+              required
+          >
+              <option value="">Select location</option>
+
+              {branches.map((b) => (
+                  <option
+                      key={b.id}
+                      value={b.location}
+                  >
+                      {b.location}
+                  </option>
+              ))}
+          </select>
           <button type="submit">Add Expense</button>
         </form>
         {error && <p className="alert-error">{error}</p>}

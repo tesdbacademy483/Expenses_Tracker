@@ -26,7 +26,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
         model = Expense
         fields = [
             "id", "manager", "branch", "branch_name", "manager_name",
-            "type", "amount", "date", "description", "created_at",
+            "type", "amount", "date", "description", "location", "created_at",
             "salary_detail", "tax_detail",
         ]
         read_only_fields = ["id", "created_at"]

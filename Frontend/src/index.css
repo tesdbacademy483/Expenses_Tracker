@@ -76,12 +76,23 @@ body {
 }
 .card h3 { margin-top: 0; }
 
+/* Manager Dashboard - 3 horizontal cards */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
+
+
+/* Admin Dashboard - 5 horizontal cards */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
 .kpi-card {
   background: var(--card-bg);
   border: 1px solid var(--border);

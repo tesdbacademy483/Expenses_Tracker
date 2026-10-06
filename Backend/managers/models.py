@@ -13,6 +13,8 @@ class ManagerProfile(models.Model):
     branch = models.ForeignKey(
         "branches.Branch", on_delete=models.CASCADE, related_name="manager_profiles"
     )
+    location = models.CharField(max_length=200)
+    
     designation = models.CharField(max_length=100, default="Branch Manager")
     created_at = models.DateTimeField(auto_now_add=True)
 
