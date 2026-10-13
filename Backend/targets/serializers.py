@@ -71,6 +71,7 @@ class TargetEntrySerializer(serializers.ModelSerializer):
             "date",
             "achieved_amount",
             "payment_type",
+            "payment_way",
             "achievement_percent",
             "created_at",
         ]

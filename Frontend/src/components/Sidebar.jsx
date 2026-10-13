@@ -30,7 +30,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <h2>Branch Manager</h2>
+        <h2>{isAdmin ? "Admin Branch" : "Branch Manager"}</h2>
         <p className="sidebar-user">{user?.name} · {user?.role}</p>
         {user?.branch_name && <p className="sidebar-branch">{user.branch_name}</p>}
       </div>

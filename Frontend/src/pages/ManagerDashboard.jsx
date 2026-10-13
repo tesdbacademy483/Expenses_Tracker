@@ -124,27 +124,6 @@ export default function ManagerDashboard() {
               </p>
 
 
-              {/* <div className="kpi-card">
-                <span className="kpi-label">Target Amount</span>
-                <span className="kpi-value">
-                  ₹{Number(t.target_amount || 0).toLocaleString()}
-                </span>
-              </div>
-
-              <div className="kpi-card">
-                <span className="kpi-label">Total Achieved</span>
-                <span className="kpi-value">
-                  ₹{totalAchieved.toLocaleString()}
-                </span>
-              </div>
-
-              <div className="kpi-card">
-                <span className="kpi-label">Total Achievement %</span>
-                <span className="kpi-value">
-                  {totalAchievementPercent}%
-                </span>
-              </div> */}
-
 
               <div className="kpi-grid">
 

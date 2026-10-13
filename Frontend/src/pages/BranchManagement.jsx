@@ -226,7 +226,7 @@ export default function BranchManagement() {
   return (
     <div className="page">
 
-      <h1>Branch Management</h1>
+      <h1>Branch Management </h1>
 
       {/* CREATE / EDIT FORM */}
       <div className="card">
@@ -332,27 +332,23 @@ export default function BranchManagement() {
                     ).toLocaleDateString()}
                   </td>
 
-                  <td>
+                <td className="branch-actions">
+                  <button
+                    type="button"
+                    className="branch-edit-btn"
+                    onClick={() => handleEdit(b)}
+                  >
+                    Edit
+                  </button>
 
-                    <button
-                      className="link-btn"
-                      onClick={() => handleEdit(b)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="link-btn"
-                      onClick={() => handleDelete(b)}
-                      style={{
-                        marginLeft: "15px",
-                        color: "red",
-                      }}
-                    >
-                      Delete
-                    </button>
-
-                  </td>
+                  <button
+                    type="button"
+                    className="branch-delete-btn"
+                    onClick={() => handleDelete(b)}
+                  >
+                    Delete
+                  </button>
+                </td>
 
                 </tr>
 

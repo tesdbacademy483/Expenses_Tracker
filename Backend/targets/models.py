@@ -76,6 +76,8 @@ class Target(models.Model):
 
     location = models.CharField(max_length=200)
 
+    
+
     type = models.CharField(
         max_length=10,
         choices=TYPE_CHOICES
@@ -138,6 +140,12 @@ class TargetEntry(models.Model):
         max_length=10,
         choices=PAYMENT_CHOICES,
         default="cash"
+    )
+
+    payment_way = models.CharField(
+    max_length=200,
+    blank=True,
+    default="",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

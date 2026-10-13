@@ -31,6 +31,7 @@ export default function TargetManagement() {
         date: entry.date,
         achieved_amount: entry.achieved_amount,
         payment_type: entry.payment_type,
+        payment_way: entry.payment_way || "",
       });
     };
 
@@ -44,6 +45,7 @@ export default function TargetManagement() {
         date: editEntry.date,
         achieved_amount: editEntry.achieved_amount,
         payment_type: editEntry.payment_type,
+        payment_way: editEntry.payment_way,
       }
     );
 
@@ -117,7 +119,8 @@ export default function TargetManagement() {
   if (
       !entry?.date ||
       !entry?.achieved_amount ||
-      !entry?.payment_type
+      !entry?.payment_type ||
+      !entry?.payment_way?.trim()
       ) {
           return;
       }
@@ -128,6 +131,7 @@ export default function TargetManagement() {
       date: entry.date,
       achieved_amount: entry.achieved_amount,
       payment_type: entry.payment_type,
+      payment_way: entry.payment_way.trim(),
     });
 
     setEntryForm({
@@ -154,7 +158,10 @@ export default function TargetManagement() {
         <h3>Create Target</h3>
   
 
-      <form className="inline-form" onSubmit={handleCreateTarget}>
+      <form 
+      className="inline-form" 
+      onSubmit={handleCreateTarget}
+      >
 
           <input
             placeholder="Target name"
@@ -261,37 +268,41 @@ export default function TargetManagement() {
             required
           />
 
-          {/* NEW - Start Date */}
-          <input
-            type="date"
-            value={form.start_date}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                start_date: e.target.value
-              })
-            }
-            required
-          />
+         
 
-          {/* NEW - End Date */}
-          <input
-            type="date"
-            value={form.end_date}
-            min={form.start_date || undefined}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                end_date: e.target.value
-              })
-            }
-            required
-          />
+        </form>
 
-          <button type="submit">
-            Create Target
-          </button>
+        <form
+          className="inline-form target-create-form"
+          onSubmit={handleCreateTarget}
+        >
+          {/* First row */}
+          {/* Keep your existing Target Name, Type, Branch, Manager,
+              Location and Target Amount inputs here */}
 
+          {/* Second row */}
+          <div className="target-date-row">
+            <input
+              type="date"
+              value={form.start_date}
+              onChange={(e) =>
+                setForm({ ...form, start_date: e.target.value })
+              }
+              required
+            />
+
+            <input
+              type="date"
+              value={form.end_date}
+              min={form.start_date || undefined}
+              onChange={(e) =>
+                setForm({ ...form, end_date: e.target.value })
+              }
+              required
+            />
+
+            <button type="submit">Create Target</button>
+          </div>
         </form>
         
         {error && <p className="alert-error">{error}</p>}
@@ -335,6 +346,7 @@ export default function TargetManagement() {
                 <th>Achieved</th>
                 <th>Payment Type</th>
                 <th>Achievement %</th>
+                <th>PAYMENT WAY</th>
                 {isAdmin && <th>Action</th>}
               </tr>
             </thead>
@@ -366,13 +378,16 @@ export default function TargetManagement() {
                     {entry.achievement_percent}%
                   </td>
 
+                  <td>{entry.payment_way}</td>
+
                   {isAdmin && (
                     <td>
                       <button
                         type="button"
+                        className="payment-edit-btn"
                         onClick={() => handleEditEntry(t.id, entry)}
                       >
-                        Edit
+                        Edit 
                       </button>
                     </td>
                   )}
@@ -384,65 +399,94 @@ export default function TargetManagement() {
 
           </table>
 
-   {isAdmin &&
-  editEntry &&
-  editEntry.target === t.id && (
-    <div className="card">
-      <h4>Edit Payment</h4>
+ {isAdmin && editEntry && editEntry.target === t.id && (
+  <div className="edit-payment-card">
+    <h4>Edit Payment</h4>
 
-      <input
-        type="date"
-        value={editEntry.date}
-        onChange={(e) =>
-          setEditEntry({
-            ...editEntry,
-            date: e.target.value,
-          })
-        }
-      />
+    <div className="edit-payment-form">
+      <div className="edit-field">
+        <label>Payment Date</label>
+        <input
+          type="date"
+          value={editEntry.date}
+          onChange={(e) =>
+            setEditEntry({
+              ...editEntry,
+              date: e.target.value,
+            })
+          }
+        />
+      </div>
 
-      <input
-        type="number"
-        step="0.01"
-        placeholder="Achieved amount"
-        value={editEntry.achieved_amount}
-        onChange={(e) =>
-          setEditEntry({
-            ...editEntry,
-            achieved_amount: e.target.value,
-          })
-        }
-      />
+      <div className="edit-field">
+        <label>Achieved Amount (₹)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          placeholder="Enter amount"
+          value={editEntry.achieved_amount}
+          onChange={(e) =>
+            setEditEntry({
+              ...editEntry,
+              achieved_amount: e.target.value,
+            })
+          }
+        />
+      </div>
 
-      <select
-        value={editEntry.payment_type}
-        onChange={(e) =>
-          setEditEntry({
-            ...editEntry,
-            payment_type: e.target.value,
-          })
-        }
-      >
-        <option value="cash">Cash</option>
-        <option value="card">Card</option>
-        <option value="upi">UPI</option>
-      </select>
+      <div className="edit-field">
+        <label>Payment Type</label>
+        <select
+          value={editEntry.payment_type}
+          onChange={(e) =>
+            setEditEntry({
+              ...editEntry,
+              payment_type: e.target.value,
+            })
+          }
+        >
+          <option value="cash">Cash</option>
+          <option value="card">Card</option>
+          <option value="upi">UPI</option>
+        </select>
+      </div>
 
-      <button
-        type="button"
-        onClick={handleUpdateEntry}
-      >
-        Update
-      </button>
+      <div className="edit-field">
+        <label>Payment Way</label>
+        <input
+          type="text"
+          placeholder="e.g. Arrear Payment"
+          value={editEntry.payment_way || ""}
+          onChange={(e) =>
+            setEditEntry({
+              ...editEntry,
+              payment_way: e.target.value,
+            })
+          }
+        />
+      </div>
 
-      <button
-        type="button"
-        onClick={() => setEditEntry(null)}
-      >
-        Cancel
-      </button>
+      <div className="edit-actions">
+        <button
+          type="button"
+          className="btn-update"
+          onClick={handleUpdateEntry}
+        >
+          Update
+        </button>
+
+        <button
+          type="button"
+          className="btn-cancel"
+          onClick={() => setEditEntry(null)}
+        >
+          Cancel
+        </button>
+      </div>
     </div>
-  )}
+  </div>
+)}
 
 {!isAdmin && (
             <form
@@ -505,6 +549,22 @@ export default function TargetManagement() {
                 <option value="card">Card</option>
                 <option value="upi">UPI</option>
             </select>
+
+            <input
+              type="text"
+              placeholder="Payment Way (e.g. Arrear Payment)"
+              value={entryForm[t.id]?.payment_way || ""}
+              onChange={(e) =>
+                setEntryForm((prev) => ({
+                  ...prev,
+                  [t.id]: {
+                    ...prev[t.id],
+                    payment_way: e.target.value,
+                  },
+                }))
+              }
+              required
+              />
 
               <button type="submit">
 
