@@ -3,6 +3,7 @@ from .models import Target, TargetEntry
 from .serializers import TargetSerializer, TargetEntrySerializer
 from core.permissions import IsAdminOrManager
 from core.mixins import BranchScopedQuerysetMixin
+from core.pagination import TargetEntryPagination
 
 
 class TargetViewSet(BranchScopedQuerysetMixin, viewsets.ModelViewSet):
@@ -27,6 +28,7 @@ class TargetEntryViewSet(viewsets.ModelViewSet):
     queryset = TargetEntry.objects.select_related("target", "target__branch").all()
     serializer_class = TargetEntrySerializer
     permission_classes = [IsAdminOrManager]
+    pagination_class = TargetEntryPagination
     filterset_fields = ["target", "date"]
 
     def get_queryset(self):

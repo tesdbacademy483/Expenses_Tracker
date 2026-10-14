@@ -21,7 +21,28 @@ export default function TargetManagement() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [editEntry, setEditEntry] = useState(null);
+  const [entryPages, setEntryPages] = useState({});
+  const ENTRIES_PER_PAGE = 5;
 
+  const getPaginatedEntries = (targetId, entries = []) => {
+      const currentPage = entryPages[targetId] || 1;
+      const totalPages = Math.ceil(entries.length / ENTRIES_PER_PAGE);
+
+      const startIndex = (currentPage - 1) * ENTRIES_PER_PAGE;
+
+      return {
+        currentPage,
+        totalPages,
+        entries: entries.slice(startIndex, startIndex + ENTRIES_PER_PAGE),
+      };
+    };
+
+  const changeEntryPage = (targetId, page) => {
+      setEntryPages((prev) => ({
+        ...prev,
+        [targetId]: page,
+      }));
+  };
   const handleEditEntry = (targetId, entry) => {
   if (!isAdmin) return;
 
@@ -351,7 +372,8 @@ export default function TargetManagement() {
               </tr>
             </thead>
 
-            <tbody>
+            {/* <tbody>
+              
 
               {t.entries.map((entry) => (
                 <tr key={entry.id}>
@@ -395,9 +417,83 @@ export default function TargetManagement() {
                 </tr>
               ))}
 
+            </tbody> */}
+
+            <tbody>
+              {(t.entries || [])
+                .slice(
+                  ((entryPages[t.id] || 1) - 1) * ENTRIES_PER_PAGE,
+                  (entryPages[t.id] || 1) * ENTRIES_PER_PAGE
+                )
+                .map((entry) => (
+                  <tr key={entry.id}>
+                    <td>{entry.date}</td>
+
+                    <td>
+                      ₹{Number(entry.achieved_amount || 0).toLocaleString("en-IN")}
+                    </td>
+
+                    <td>
+                      <span className="badge badge-blue">
+                        {entry.payment_type === "cash"
+                          ? "Cash"
+                          : entry.payment_type === "card"
+                          ? "Card"
+                          : "UPI"}
+                      </span>
+                    </td>
+
+                    <td>{entry.achievement_percent}%</td>
+                    <td>{entry.payment_way || "-"}</td>
+
+                    {isAdmin && (
+                      <td>
+                        <button
+                          type="button"
+                          className="payment-edit-btn"
+                          onClick={() => handleEditEntry(t.id, entry)}
+                        >
+                          Edit
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
             </tbody>
 
           </table>
+
+          {(t.entries || []).length > ENTRIES_PER_PAGE && (
+  <div className="pagination">
+    <span>
+      Page {entryPages[t.id] || 1} of{" "}
+      {Math.ceil(t.entries.length / ENTRIES_PER_PAGE)}
+    </span>
+
+    <button
+      type="button"
+      disabled={(entryPages[t.id] || 1) === 1}
+      onClick={() =>
+        changeEntryPage(t.id, (entryPages[t.id] || 1) - 1)
+      }
+    >
+      Previous
+    </button>
+
+    <button
+      type="button"
+      disabled={
+        (entryPages[t.id] || 1) >=
+        Math.ceil(t.entries.length / ENTRIES_PER_PAGE)
+      }
+      onClick={() =>
+        changeEntryPage(t.id, (entryPages[t.id] || 1) + 1)
+      }
+    >
+      Next
+    </button>
+  </div>
+)}
 
  {isAdmin && editEntry && editEntry.target === t.id && (
   <div className="edit-payment-card">
